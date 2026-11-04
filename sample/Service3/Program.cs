@@ -8,6 +8,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using Serilog;
+using Shared.RunSqlMigration;
 using Shared.Transports;
 using Service3Api;
 using Service3Api.Contexts;
@@ -68,8 +69,7 @@ builder.Services.AddDbContextPool<Service3Context>(options =>
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<Service3Context>();
-await Service3Api.Data.Service3DataSeeder.SeedAsync(dbContext);
+// Creates the tables and seeds the countries and provinces (see Migrations/ and Data/Service3SeedData.cs)
+await MigrationDatabase.MigrationDatabaseAsync<Service3Context>(app);
 app.MapFxMapperGrpc();
 app.Run();

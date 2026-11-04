@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Service2.Data;
 using Service2.Models;
 
 namespace Service2.Contexts;
@@ -11,6 +12,7 @@ public class Service2Context(DbContextOptions<Service2Context> options) : DbCont
     {
         var userEntity = modelBuilder.Entity<User>();
         userEntity.HasKey(a => a.Id);
+        Service2SeedData.Apply(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -101,17 +101,14 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// Creates the tables and seeds the PostgreSQL data (see ContextMigrations/, OtherContextMigrations/ and
+// Data/Service1SeedData.cs)
 await MigrationDatabase.MigrationDatabaseAsync<Service1Context>(app);
 await MigrationDatabase.MigrationDatabaseAsync<OtherService1Context>(app);
 
-// Seed MongoDB data
-await Service1.Data.Service1DataSeeder.SeedMemberSocialAsync(memberSocialCollection);
+// MongoDB has no migrations, so MemberSocial is still seeded in code
+await Service1.Data.Service1MongoSeeder.SeedMemberSocialAsync(memberSocialCollection);
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<Service1Context>();
-var otherDbContext = scope.ServiceProvider.GetRequiredService<OtherService1Context>();
-await Service1.Data.Service1DataSeeder.SeedMemberAdditionalDataAsync(dbContext);
-await Service1.Data.Service1DataSeeder.SeedServiceMemberAddressAsync(otherDbContext);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsProduction())
 {

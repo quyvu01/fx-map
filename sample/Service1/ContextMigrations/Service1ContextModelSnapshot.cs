@@ -32,6 +32,108 @@ namespace Service1.ContextMigrations
                     b.HasKey("Id");
 
                     b.ToTable("MemberAdditionalDatas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "member-001",
+                            Name = "Alice Cooper"
+                        },
+                        new
+                        {
+                            Id = "member-002",
+                            Name = "Bob Dylan"
+                        },
+                        new
+                        {
+                            Id = "member-003",
+                            Name = "Charlie Chaplin"
+                        },
+                        new
+                        {
+                            Id = "member-004",
+                            Name = "Diana Prince"
+                        },
+                        new
+                        {
+                            Id = "member-005",
+                            Name = "Edward Norton"
+                        },
+                        new
+                        {
+                            Id = "member-006",
+                            Name = "Fiona Apple"
+                        },
+                        new
+                        {
+                            Id = "member-007",
+                            Name = "George Harrison"
+                        },
+                        new
+                        {
+                            Id = "member-008",
+                            Name = "Helen Mirren"
+                        },
+                        new
+                        {
+                            Id = "member-009",
+                            Name = "Isaac Newton"
+                        },
+                        new
+                        {
+                            Id = "member-010",
+                            Name = "Julia Roberts"
+                        },
+                        new
+                        {
+                            Id = "member-011",
+                            Name = "Kevin Bacon"
+                        },
+                        new
+                        {
+                            Id = "member-012",
+                            Name = "Laura Dern"
+                        },
+                        new
+                        {
+                            Id = "member-013",
+                            Name = "Michael Jordan"
+                        },
+                        new
+                        {
+                            Id = "member-014",
+                            Name = "Natalie Portman"
+                        },
+                        new
+                        {
+                            Id = "member-015",
+                            Name = "Oscar Wilde"
+                        },
+                        new
+                        {
+                            Id = "member-016",
+                            Name = "Patricia Arquette"
+                        },
+                        new
+                        {
+                            Id = "member-017",
+                            Name = "Quentin Tarantino"
+                        },
+                        new
+                        {
+                            Id = "member-018",
+                            Name = "Rachel Green"
+                        },
+                        new
+                        {
+                            Id = "member-019",
+                            Name = "Samuel Jackson"
+                        },
+                        new
+                        {
+                            Id = "member-020",
+                            Name = "Tina Turner"
+                        });
                 });
 #pragma warning restore 612, 618
         }
