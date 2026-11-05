@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using Service3Api.Contexts;
 using Service3Api.Models;
 
 namespace Service3Api.Data;
 
 /// <summary>
-/// Provides seed data for Service3 (Countries and Provinces).
-/// This is the foundation data that other services depend on via ProvinceId FK.
+/// The seed data of Service3 (countries and provinces), inserted by the migrations through <c>HasData</c>
+/// (see Migrations/*_SeedData.cs). This is the foundation data that the other services refer to by ProvinceId.
+/// Changing it means adding a migration: <c>dotnet ef migrations add &lt;Name&gt;</c>.
 /// </summary>
-public static class Service3DataSeeder
+public static class Service3SeedData
 {
     private static readonly Dictionary<string, (string Name, List<(Guid Id, string Name)> Provinces)> CountryData = new()
     {
@@ -72,66 +72,28 @@ public static class Service3DataSeeder
         }
     };
 
-    public static async Task SeedAsync(Service3Context context, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<Country> Countries { get; } = CountryData
+        .Select(c => new Country { Id = c.Key, Name = c.Value.Name })
+        .ToList();
+
+    public static IReadOnlyList<Province> Provinces { get; } = CountryData
+        .SelectMany(c => c.Value.Provinces.Select(p => new Province { Id = p.Id, Name = p.Name, CountryId = c.Key }))
+        .ToList();
+
+    public static void Apply(ModelBuilder modelBuilder)
     {
-        var countrySet = context.Set<Country>();
-
-        foreach (var (countryId, (countryName, provinces)) in CountryData)
-        {
-            var existedCountry = await countrySet
-                .Include(c => c.Provinces)
-                .FirstOrDefaultAsync(x => x.Id == countryId, cancellationToken);
-
-            if (existedCountry == null)
-            {
-                countrySet.Add(new Country
-                {
-                    Id = countryId,
-                    Name = countryName,
-                    Provinces = provinces.Select(p => new Province
-                    {
-                        Id = p.Id,
-                        Name = p.Name
-                    }).ToList()
-                });
-            }
-            else
-            {
-                // Update provinces if needed
-                var existingProvinceIds = existedCountry.Provinces.Select(p => p.Id).ToHashSet();
-                var newProvinces = provinces
-                    .Where(p => !existingProvinceIds.Contains(p.Id))
-                    .Select(p => new Province
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        CountryId = countryId
-                    });
-
-                context.Set<Province>().AddRange(newProvinces);
-            }
-        }
-
-        await context.SaveChangesAsync(cancellationToken);
+        modelBuilder.Entity<Country>().HasData(Countries);
+        modelBuilder.Entity<Province>().HasData(Provinces);
     }
 
     /// <summary>
     /// Gets all province IDs for use in other services.
     /// </summary>
-    public static List<Guid> GetAllProvinceIds()
-    {
-        return CountryData
-            .SelectMany(c => c.Value.Provinces.Select(p => p.Id))
-            .ToList();
-    }
+    public static List<Guid> GetAllProvinceIds() => Provinces.Select(p => p.Id).ToList();
 
     /// <summary>
     /// Gets province IDs for a specific country.
     /// </summary>
-    public static List<Guid> GetProvinceIdsByCountry(string countryId)
-    {
-        return CountryData.TryGetValue(countryId, out var countryData)
-            ? countryData.Provinces.Select(p => p.Id).ToList()
-            : [];
-    }
+    public static List<Guid> GetProvinceIdsByCountry(string countryId) =>
+        Provinces.Where(p => p.CountryId == countryId).Select(p => p.Id).ToList();
 }

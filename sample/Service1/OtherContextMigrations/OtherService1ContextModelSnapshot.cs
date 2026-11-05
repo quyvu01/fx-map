@@ -41,6 +41,288 @@ namespace Service1.OtherContextMigrations
                     b.HasKey("Id");
 
                     b.ToTable("MemberAddresses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "addr-001",
+                            City = "San Francisco",
+                            ProvinceId = "01962f9a-f7f8-7f61-941c-6a086fe96cd2",
+                            Street = "123 Silicon Valley Blvd",
+                            ZipCode = "94102"
+                        },
+                        new
+                        {
+                            Id = "addr-002",
+                            City = "Los Angeles",
+                            ProvinceId = "01962f9a-f7f8-7f61-941c-6a086fe96cd2",
+                            Street = "456 Hollywood Dr",
+                            ZipCode = "90028"
+                        },
+                        new
+                        {
+                            Id = "addr-003",
+                            City = "San Diego",
+                            ProvinceId = "01962f9a-f7f8-7f61-941c-6a086fe96cd2",
+                            Street = "789 Beach Ave",
+                            ZipCode = "92101"
+                        },
+                        new
+                        {
+                            Id = "addr-004",
+                            City = "Palo Alto",
+                            ProvinceId = "01962f9a-f7f8-7f61-941c-6a086fe96cd2",
+                            Street = "321 Tech Park Way",
+                            ZipCode = "94301"
+                        },
+                        new
+                        {
+                            Id = "addr-005",
+                            City = "New York",
+                            ProvinceId = "01962f9a-f7f8-7b4c-9b4d-eae8ea6e5fc7",
+                            Street = "100 Wall Street",
+                            ZipCode = "10005"
+                        },
+                        new
+                        {
+                            Id = "addr-006",
+                            City = "New York",
+                            ProvinceId = "01962f9a-f7f8-7b4c-9b4d-eae8ea6e5fc7",
+                            Street = "200 Broadway",
+                            ZipCode = "10007"
+                        },
+                        new
+                        {
+                            Id = "addr-007",
+                            City = "New York",
+                            ProvinceId = "01962f9a-f7f8-7b4c-9b4d-eae8ea6e5fc7",
+                            Street = "300 Park Ave",
+                            ZipCode = "10022"
+                        },
+                        new
+                        {
+                            Id = "addr-008",
+                            City = "New York",
+                            ProvinceId = "01962f9a-f7f8-7b4c-9b4d-eae8ea6e5fc7",
+                            Street = "400 Madison Ave",
+                            ZipCode = "10017"
+                        },
+                        new
+                        {
+                            Id = "addr-009",
+                            City = "Houston",
+                            ProvinceId = "01962f9a-f7f8-7e54-a79d-575a8e882eb8",
+                            Street = "500 Main St",
+                            ZipCode = "77002"
+                        },
+                        new
+                        {
+                            Id = "addr-010",
+                            City = "Austin",
+                            ProvinceId = "01962f9a-f7f8-7e54-a79d-575a8e882eb8",
+                            Street = "600 Congress Ave",
+                            ZipCode = "78701"
+                        },
+                        new
+                        {
+                            Id = "addr-011",
+                            City = "Dallas",
+                            ProvinceId = "01962f9a-f7f8-7e54-a79d-575a8e882eb8",
+                            Street = "700 Dallas Parkway",
+                            ZipCode = "75201"
+                        },
+                        new
+                        {
+                            Id = "addr-012",
+                            City = "Miami",
+                            ProvinceId = "01962f9a-f7f8-7a2c-8b3d-4c5e6f789012",
+                            Street = "800 Ocean Drive",
+                            ZipCode = "33139"
+                        },
+                        new
+                        {
+                            Id = "addr-013",
+                            City = "Orlando",
+                            ProvinceId = "01962f9a-f7f8-7a2c-8b3d-4c5e6f789012",
+                            Street = "900 Orange Ave",
+                            ZipCode = "32801"
+                        },
+                        new
+                        {
+                            Id = "addr-014",
+                            City = "Chicago",
+                            ProvinceId = "01962f9a-f7f8-7d1b-9c2a-5d6e7f890123",
+                            Street = "1000 Michigan Ave",
+                            ZipCode = "60601"
+                        },
+                        new
+                        {
+                            Id = "addr-015",
+                            City = "Chicago",
+                            ProvinceId = "01962f9a-f7f8-7d1b-9c2a-5d6e7f890123",
+                            Street = "1100 State St",
+                            ZipCode = "60605"
+                        },
+                        new
+                        {
+                            Id = "addr-016",
+                            City = "Toronto",
+                            ProvinceId = "01962f9a-f7f8-7c3d-8e4f-6a7b8c9d0123",
+                            Street = "1200 Bay St",
+                            ZipCode = "M5J 2R8"
+                        },
+                        new
+                        {
+                            Id = "addr-017",
+                            City = "Toronto",
+                            ProvinceId = "01962f9a-f7f8-7c3d-8e4f-6a7b8c9d0123",
+                            Street = "1300 Yonge St",
+                            ZipCode = "M4T 1W6"
+                        },
+                        new
+                        {
+                            Id = "addr-018",
+                            City = "Montreal",
+                            ProvinceId = "01962f9a-f7f8-7e5f-9a6b-7c8d9e0f1234",
+                            Street = "1400 Rue Saint-Denis",
+                            ZipCode = "H2X 3K2"
+                        },
+                        new
+                        {
+                            Id = "addr-019",
+                            City = "Quebec City",
+                            ProvinceId = "01962f9a-f7f8-7e5f-9a6b-7c8d9e0f1234",
+                            Street = "1500 Grande Allée",
+                            ZipCode = "G1R 2J5"
+                        },
+                        new
+                        {
+                            Id = "addr-020",
+                            City = "Vancouver",
+                            ProvinceId = "01962f9a-f7f8-7f6a-8b7c-9d0e1f234567",
+                            Street = "1600 Robson St",
+                            ZipCode = "V6G 1C7"
+                        },
+                        new
+                        {
+                            Id = "addr-021",
+                            City = "Victoria",
+                            ProvinceId = "01962f9a-f7f8-7f6a-8b7c-9d0e1f234567",
+                            Street = "1700 Government St",
+                            ZipCode = "V8W 1Y4"
+                        },
+                        new
+                        {
+                            Id = "addr-022",
+                            City = "London",
+                            ProvinceId = "01962f9a-f7f8-7a7b-9c8d-0e1f23456789",
+                            Street = "1800 Oxford St",
+                            ZipCode = "W1D 1BS"
+                        },
+                        new
+                        {
+                            Id = "addr-023",
+                            City = "London",
+                            ProvinceId = "01962f9a-f7f8-7a7b-9c8d-0e1f23456789",
+                            Street = "1900 Baker St",
+                            ZipCode = "NW1 6XE"
+                        },
+                        new
+                        {
+                            Id = "addr-024",
+                            City = "Edinburgh",
+                            ProvinceId = "01962f9a-f7f8-7b8c-0d9e-1f2345678901",
+                            Street = "2000 Royal Mile",
+                            ZipCode = "EH1 1RE"
+                        },
+                        new
+                        {
+                            Id = "addr-025",
+                            City = "Glasgow",
+                            ProvinceId = "01962f9a-f7f8-7b8c-0d9e-1f2345678901",
+                            Street = "2100 Buchanan St",
+                            ZipCode = "G1 3HL"
+                        },
+                        new
+                        {
+                            Id = "addr-026",
+                            City = "Cardiff",
+                            ProvinceId = "01962f9a-f7f8-7c9d-1e0f-23456789012a",
+                            Street = "2200 Queen St",
+                            ZipCode = "CF10 2BH"
+                        },
+                        new
+                        {
+                            Id = "addr-027",
+                            City = "Sydney",
+                            ProvinceId = "01962f9a-f7f8-7d0e-2f1a-3456789012bc",
+                            Street = "2300 George St",
+                            ZipCode = "2000"
+                        },
+                        new
+                        {
+                            Id = "addr-028",
+                            City = "Melbourne",
+                            ProvinceId = "01962f9a-f7f8-7e1f-3a2b-456789012cde",
+                            Street = "2400 Collins St",
+                            ZipCode = "3000"
+                        },
+                        new
+                        {
+                            Id = "addr-029",
+                            City = "Brisbane",
+                            ProvinceId = "01962f9a-f7f8-7f2a-4b3c-56789012def0",
+                            Street = "2500 Queen St",
+                            ZipCode = "4000"
+                        },
+                        new
+                        {
+                            Id = "addr-030",
+                            City = "Munich",
+                            ProvinceId = "01962f9a-f7f8-7a3b-5c4d-6789012ef012",
+                            Street = "2600 Marienplatz",
+                            ZipCode = "80331"
+                        },
+                        new
+                        {
+                            Id = "addr-031",
+                            City = "Paris",
+                            ProvinceId = "01962f9a-f7f8-7d6e-8f7a-9012f0123456",
+                            Street = "2700 Champs-Élysées",
+                            ZipCode = "75008"
+                        },
+                        new
+                        {
+                            Id = "addr-032",
+                            City = "Tokyo",
+                            ProvinceId = "01962f9a-f7f8-7a9b-1c0d-2f01234567ab",
+                            Street = "2800 Shibuya",
+                            ZipCode = "150-0002"
+                        },
+                        new
+                        {
+                            Id = "addr-033",
+                            City = "Osaka",
+                            ProvinceId = "01962f9a-f7f8-7b0c-2d1e-f01234567abc",
+                            Street = "2900 Dotonbori",
+                            ZipCode = "542-0071"
+                        },
+                        new
+                        {
+                            Id = "addr-034",
+                            City = "Ho Chi Minh City",
+                            ProvinceId = "01962f9a-f7f8-7d2e-4f3a-1234567abcde",
+                            Street = "3000 Nguyen Hue",
+                            ZipCode = "700000"
+                        },
+                        new
+                        {
+                            Id = "addr-035",
+                            City = "Hanoi",
+                            ProvinceId = "01962f9a-f7f8-7e3f-5a4b-234567abcdef",
+                            Street = "3100 Hoan Kiem",
+                            ZipCode = "100000"
+                        });
                 });
 #pragma warning restore 612, 618
         }

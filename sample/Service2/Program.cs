@@ -1,3 +1,4 @@
+using Shared.RunSqlMigration;
 using Shared.Transports;
 using System.Reflection;
 using FxMap.Abstractions;
@@ -69,9 +70,9 @@ builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<Service2Context>();
-await Service2.Data.Service2DataSeeder.SeedAsync(dbContext);
+// Creates the table and seeds the users (see Migrations/ and Data/Service2SeedData.cs)
+await MigrationDatabase.MigrationDatabaseAsync<Service2Context>(app);
+
 app.MapGet("/test-get-user", async (IDistributedMapper mapper) =>
 {
     var userResponse = new UserResponse

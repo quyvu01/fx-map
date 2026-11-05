@@ -33,6 +33,48 @@ namespace Service3Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "US",
+                            Name = "United States"
+                        },
+                        new
+                        {
+                            Id = "CA",
+                            Name = "Canada"
+                        },
+                        new
+                        {
+                            Id = "UK",
+                            Name = "United Kingdom"
+                        },
+                        new
+                        {
+                            Id = "AU",
+                            Name = "Australia"
+                        },
+                        new
+                        {
+                            Id = "DE",
+                            Name = "Germany"
+                        },
+                        new
+                        {
+                            Id = "FR",
+                            Name = "France"
+                        },
+                        new
+                        {
+                            Id = "JP",
+                            Name = "Japan"
+                        },
+                        new
+                        {
+                            Id = "VN",
+                            Name = "Vietnam"
+                        });
                 });
 
             modelBuilder.Entity("Service3Api.Models.Province", b =>
@@ -52,6 +94,164 @@ namespace Service3Api.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Provinces");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7f61-941c-6a086fe96cd2"),
+                            CountryId = "US",
+                            Name = "California"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7b4c-9b4d-eae8ea6e5fc7"),
+                            CountryId = "US",
+                            Name = "New York"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7e54-a79d-575a8e882eb8"),
+                            CountryId = "US",
+                            Name = "Texas"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7a2c-8b3d-4c5e6f789012"),
+                            CountryId = "US",
+                            Name = "Florida"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7d1b-9c2a-5d6e7f890123"),
+                            CountryId = "US",
+                            Name = "Illinois"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7c3d-8e4f-6a7b8c9d0123"),
+                            CountryId = "CA",
+                            Name = "Ontario"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7e5f-9a6b-7c8d9e0f1234"),
+                            CountryId = "CA",
+                            Name = "Quebec"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7f6a-8b7c-9d0e1f234567"),
+                            CountryId = "CA",
+                            Name = "British Columbia"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7a7b-9c8d-0e1f23456789"),
+                            CountryId = "UK",
+                            Name = "England"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7b8c-0d9e-1f2345678901"),
+                            CountryId = "UK",
+                            Name = "Scotland"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7c9d-1e0f-23456789012a"),
+                            CountryId = "UK",
+                            Name = "Wales"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7d0e-2f1a-3456789012bc"),
+                            CountryId = "AU",
+                            Name = "New South Wales"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7e1f-3a2b-456789012cde"),
+                            CountryId = "AU",
+                            Name = "Victoria"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7f2a-4b3c-56789012def0"),
+                            CountryId = "AU",
+                            Name = "Queensland"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7a3b-5c4d-6789012ef012"),
+                            CountryId = "DE",
+                            Name = "Bavaria"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7b4c-6d5e-789012f01234"),
+                            CountryId = "DE",
+                            Name = "North Rhine-Westphalia"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7c5d-7e6f-89012f012345"),
+                            CountryId = "DE",
+                            Name = "Baden-Württemberg"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7d6e-8f7a-9012f0123456"),
+                            CountryId = "FR",
+                            Name = "Île-de-France"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7e7f-9a8b-012f01234567"),
+                            CountryId = "FR",
+                            Name = "Provence-Alpes-Côte d'Azur"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7f8a-0b9c-12f012345678"),
+                            CountryId = "FR",
+                            Name = "Nouvelle-Aquitaine"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7a9b-1c0d-2f01234567ab"),
+                            CountryId = "JP",
+                            Name = "Tokyo"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7b0c-2d1e-f01234567abc"),
+                            CountryId = "JP",
+                            Name = "Osaka"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7c1d-3e2f-01234567abcd"),
+                            CountryId = "JP",
+                            Name = "Hokkaido"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7d2e-4f3a-1234567abcde"),
+                            CountryId = "VN",
+                            Name = "Ho Chi Minh City"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7e3f-5a4b-234567abcdef"),
+                            CountryId = "VN",
+                            Name = "Hanoi"
+                        },
+                        new
+                        {
+                            Id = new Guid("01962f9a-f7f8-7f4a-6b5c-34567abcdef0"),
+                            CountryId = "VN",
+                            Name = "Da Nang"
+                        });
                 });
 
             modelBuilder.Entity("Service3Api.Models.Province", b =>

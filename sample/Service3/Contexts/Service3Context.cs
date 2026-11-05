@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Service3Api.Data;
 using Service3Api.Models;
 
 namespace Service3Api.Contexts;
@@ -19,6 +20,8 @@ public class Service3Context(DbContextOptions<Service3Context> options) : DbCont
 
         var countryEntity = modelBuilder.Entity<Country>();
         countryEntity.HasKey(a => a.Id);
+
+        Service3SeedData.Apply(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Service1.Data;
 using Service1.Models;
 
 namespace Service1.Contexts;
@@ -11,6 +12,7 @@ public sealed class Service1Context(DbContextOptions<Service1Context> options) :
     {
         var userEntity = modelBuilder.Entity<MemberAdditionalData>();
         userEntity.HasKey(a => a.Id);
+        Service1SeedData.ApplyMemberAdditionalData(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }

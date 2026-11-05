@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Service2.Contexts;
 using Service2.Models;
 
 namespace Service2.Data;
 
 /// <summary>
-/// Provides seed data for Service2 (Users).
-/// Users are linked to Provinces from Service3 via ProvinceId FK.
+/// The seed data of Service2 (users), inserted by the migrations through <c>HasData</c> (see Migrations/*_SeedData.cs).
+/// The users point at the provinces of Service3 by ProvinceId. Changing it means adding a migration:
+/// <c>dotnet ef migrations add &lt;Name&gt;</c>.
 /// </summary>
-public static class Service2DataSeeder
+public static class Service2SeedData
 {
+    /// <summary>A migration needs a constant value, so every seeded user has the same creation time.</summary>
+    public static readonly DateTime CreatedTime = new(2026, 1, 28, 0, 0, 0, DateTimeKind.Utc);
+
     private static readonly List<(string Id, string Name, string Email, Guid ProvinceId)> UserData =
     [
         ("user-001", "John Smith", "john.smith@email.com", Guid.Parse("01962f9a-f7f8-7f61-941c-6a086fe96cd2")),
@@ -119,27 +122,16 @@ public static class Service2DataSeeder
         ("user-054", "Sharon Morgan", "sharon.m@email.com", Guid.Parse("01962f9a-f7f8-7f4a-6b5c-34567abcdef0"))
     ];
 
-    public static async Task SeedAsync(Service2Context context, CancellationToken cancellationToken = default)
-    {
-        var userSet = context.Set<User>();
-
-        foreach (var (userId, name, email, provinceId) in UserData)
+    public static IReadOnlyList<User> Users { get; } = UserData
+        .Select(u => new User
         {
-            var existedUser = await userSet
-                .FirstOrDefaultAsync(a => a.Id == userId, cancellationToken);
+            Id = u.Id,
+            Name = u.Name,
+            Email = u.Email,
+            ProvinceId = u.ProvinceId.ToString(),
+            CreatedTime = CreatedTime
+        })
+        .ToList();
 
-            if (existedUser == null)
-            {
-                userSet.Add(new User
-                {
-                    Id = userId,
-                    Name = name,
-                    Email = email,
-                    ProvinceId = provinceId.ToString()
-                });
-            }
-        }
-
-        await context.SaveChangesAsync(cancellationToken);
-    }
+    public static void Apply(ModelBuilder modelBuilder) => modelBuilder.Entity<User>().HasData(Users);
 }

@@ -1,6 +1,10 @@
 # Data Seeding Documentation
 
-This document describes the data seeding structure for the three sample services and their relationships.
+This document describes the seed data of the three sample services and their relationships.
+
+The PostgreSQL data is seeded by the EF Core migrations, not by code that runs when a service starts: each context
+declares its rows with `HasData` (the `Data/*SeedData.cs` classes) and the `*_SeedData` migration inserts them. Only
+MemberSocial (MongoDB, which has no migrations) is still seeded in code.
 
 ## Overview
 
@@ -9,7 +13,7 @@ The sample project consists of three services with the following data relationsh
 ```
 Service3 (Foundation)
    └─> Countries (8 countries)
-       └─> Provinces (24 total provinces)
+       └─> Provinces (26 total provinces)
            ├─> Service2: Users (54 users reference provinces)
            └─> Service1: MemberAddress (35 addresses reference provinces)
 
@@ -22,7 +26,7 @@ Service1 (Additional data)
 
 ## Service 3: Countries & Provinces (Foundation Data)
 
-**File**: `sample/Service3/Data/Service3DataSeeder.cs`
+**Files**: `sample/Service3/Data/Service3SeedData.cs`, `sample/Service3/Migrations/*_SeedData.cs`
 
 **Database**: PostgreSQL (`FxMapTestService3`)
 
@@ -40,7 +44,7 @@ Service3 provides the foundation geographic data that other services reference.
 - JP (Japan) - 3 provinces
 - VN (Vietnam) - 3 provinces
 
-**Total Provinces**: 24
+**Total Provinces**: 26
 
 ### Example Data
 
@@ -72,13 +76,13 @@ public class Province
 
 ### Relationships
 - **1 Country → Many Provinces** (one-to-many)
-- Provinces are created inline when Country is seeded
+- The migration inserts the countries first, then the provinces
 
 ---
 
 ## Service 2: Users
 
-**File**: `sample/Service2/Data/Service2DataSeeder.cs`
+**Files**: `sample/Service2/Data/Service2SeedData.cs`, `sample/Service2/Migrations/*_SeedData.cs`
 
 **Database**: PostgreSQL (`FxMapTestService2`)
 
@@ -86,7 +90,7 @@ public class Province
 
 Service2 contains user data, where each user is associated with a province from Service3.
 
-**Total Users**: 54 users distributed across all 24 provinces
+**Total Users**: 54 users distributed across all 26 provinces
 
 ### Distribution
 - **California**: 4 users (user-001 to user-004)
@@ -125,11 +129,12 @@ public class User
 
 ## Service 1: Member Data
 
-**File**: `sample/Service1/Data/Service1DataSeeder.cs`
+**Files**: `sample/Service1/Data/Service1SeedData.cs` with `sample/Service1/ContextMigrations/*_SeedData.cs` and
+`sample/Service1/OtherContextMigrations/*_SeedData.cs` (PostgreSQL), `sample/Service1/Data/Service1MongoSeeder.cs` (MongoDB)
 
 **Databases**:
-- PostgreSQL: `FxMapTestService1` (MemberAdditionalData)
-- PostgreSQL: `FxMapTestOtherService1` (MemberAddress)
+- PostgreSQL: `FxMapService1` (MemberAdditionalData)
+- PostgreSQL: `FxMapOtherService1` (MemberAddress)
 - MongoDB: `Service1MongoDb` (MemberSocial)
 
 ### 1. MemberAddress (OtherService1Context)
@@ -240,48 +245,47 @@ public class MemerSocialMetadata
 
 ## Seeding Order
 
-To maintain referential integrity, services must be seeded in this order:
-
-1. **Service3** - Countries and Provinces (foundation data)
-2. **Service2** - Users (depends on Provinces)
-3. **Service1** - MemberAddress (depends on Provinces), MemberAdditionalData, MemberSocial
+The services do not depend on each other at startup: the ids are fixed, and the references between services
+(ProvinceId) are plain values, not foreign keys across databases. Service3 is still the foundation the others point at.
 
 ### Execution
 
-Each service's `Program.cs` calls its seeder automatically via `UseAsyncSeeding`:
+Each service's `Program.cs` applies its migrations when it starts, which creates the tables and inserts the seed data
+once (`MigrationDatabase.MigrationDatabaseAsync<TContext>` runs only the pending migrations):
 
-**Service3/Program.cs**:
 ```csharp
-.UseAsyncSeeding(async (context, _, cancellationToken) =>
-{
-    await Service3Api.Data.Service3DataSeeder.SeedAsync((Service3Context)context, cancellationToken);
-});
+// Service3/Program.cs
+await MigrationDatabase.MigrationDatabaseAsync<Service3Context>(app);
+
+// Service2/Program.cs
+await MigrationDatabase.MigrationDatabaseAsync<Service2Context>(app);
+
+// Service1/Program.cs
+await MigrationDatabase.MigrationDatabaseAsync<Service1Context>(app);
+await MigrationDatabase.MigrationDatabaseAsync<OtherService1Context>(app);
+// MongoDB has no migrations, so MemberSocial is still seeded in code
+await Service1.Data.Service1MongoSeeder.SeedMemberSocialAsync(memberSocialCollection);
 ```
 
-**Service2/Program.cs**:
-```csharp
-.UseAsyncSeeding(async (context, _, cancellationToken) =>
-{
-    await Service2.Data.Service2DataSeeder.SeedAsync((Service2Context)context, cancellationToken);
-});
+The migrations can also be applied without running the service, for example `dotnet ef database update` in
+`sample/Service3` (Service1 has two contexts: add `--context Service1Context` or `--context OtherService1Context`).
+
+### Changing the seed data
+
+Edit the `Data/*SeedData.cs` class of the service, then add a migration, which EF Core generates from the difference:
+
+```bash
+cd sample/Service2 && dotnet ef migrations add AddMoreUsers
+cd sample/Service1 && dotnet ef migrations add AddMoreAddresses --context OtherService1Context -o OtherContextMigrations
 ```
 
-**Service1/Program.cs**:
-```csharp
-// EF Core seeding
-.UseAsyncSeeding(async (context, _, cancellationToken) =>
-{
-    await Service1.Data.Service1DataSeeder.SeedMemberAdditionalDataAsync((Service1Context)context, cancellationToken);
-});
+`sample/Samples.Tests` fails when the seed data and the migrations are out of step (`HasPendingModelChanges`).
 
-.UseAsyncSeeding(async (context, _, cancellationToken) =>
-{
-    await Service1.Data.Service1DataSeeder.SeedServiceMemberAddressAsync((OtherService1Context)context, cancellationToken);
-});
+### Databases seeded by the old code
 
-// MongoDB seeding (after migrations)
-await Service1.Data.Service1DataSeeder.SeedMemberSocialAsync(memberSocialCollection);
-```
+Before the migrations held the seed data, the services seeded the same rows in code when they started. The `*_SeedData`
+migrations first delete the rows with the seeded ids, then insert them, so a database the old code filled takes the
+migration; rows with other ids are kept.
 
 ---
 
@@ -290,26 +294,24 @@ await Service1.Data.Service1DataSeeder.SeedMemberSocialAsync(memberSocialCollect
 | Service | Entity | Count | Database | Relationships |
 |---------|--------|-------|----------|---------------|
 | Service3 | Countries | 8 | PostgreSQL | 1 → Many Provinces |
-| Service3 | Provinces | 24 | PostgreSQL | Parent of Users & Addresses |
+| Service3 | Provinces | 26 | PostgreSQL | Parent of Users & Addresses |
 | Service2 | Users | 54 | PostgreSQL | Many → 1 Province |
 | Service1 | MemberAddress | 35 | PostgreSQL | Many → 1 Province |
 | Service1 | MemberAdditionalData | 20 | PostgreSQL | Standalone |
 | Service1 | MemberSocial | 10 | MongoDB | Standalone |
 
-**Total Records**: 151 records across 6 entities
+**Total Records**: 153 records across 6 entities
 
 ---
 
-## Seeder Features
+## Seed Data Features
 
-All seeders include:
-
-✅ **Idempotent Operations**: Can be run multiple times without duplication
-✅ **Existence Checks**: Checks if data already exists before inserting
-✅ **Transaction Support**: Uses SaveChangesAsync for atomicity
-✅ **Cancellation Token Support**: Respects cancellation tokens
+✅ **In the migrations**: Inserted once by the `*_SeedData` migrations, reverted by their `Down`
+✅ **Constant values**: Fixed ids and values (Service2 users share one UTC creation time), as migrations require
+✅ **Checked by tests**: `sample/Samples.Tests` checks the data, that the migrations match it, and applies them to a
+real PostgreSQL (Testcontainers)
 ✅ **Meaningful Data**: Realistic names, emails, addresses
-✅ **Comprehensive Coverage**: All provinces have at least 1 user and 1 address
+✅ **Comprehensive Coverage**: All provinces have at least 1 user
 
 ---
 
@@ -322,25 +324,28 @@ To verify seeding works correctly:
 docker-compose up -d postgres mongodb
 
 # Run services in order
-cd sample/Service3 && dotnet run  # Seeds Countries & Provinces
-cd sample/Service2 && dotnet run  # Seeds Users
-cd sample/Service1 && dotnet run  # Seeds MemberAddress, MemberAdditionalData, MemberSocial
+cd sample/Service3 && dotnet run  # Migrations seed Countries & Provinces
+cd sample/Service2 && dotnet run  # Migrations seed Users
+cd sample/Service1 && dotnet run  # Migrations seed MemberAddresses, MemberAdditionalDatas; code seeds MemberSocial
+
+# Or the tests, which need only Docker
+dotnet test sample/Samples.Tests
 ```
 
 Check database:
 ```sql
 -- Service3
 SELECT COUNT(*) FROM "Countries";  -- Should be 8
-SELECT COUNT(*) FROM "Provinces";  -- Should be 24
+SELECT COUNT(*) FROM "Provinces";  -- Should be 26
 
 -- Service2
 SELECT COUNT(*) FROM "Users";  -- Should be 54
 
--- Service1 (FxMapTestOtherService1)
-SELECT COUNT(*) FROM "MemberAddress";  -- Should be 35
+-- Service1 (FxMapOtherService1)
+SELECT COUNT(*) FROM "MemberAddresses";  -- Should be 35
 
--- Service1 (FxMapTestService1)
-SELECT COUNT(*) FROM "MemberAdditionalData";  -- Should be 20
+-- Service1 (FxMapService1)
+SELECT COUNT(*) FROM "MemberAdditionalDatas";  -- Should be 20
 ```
 
 Check MongoDB:
